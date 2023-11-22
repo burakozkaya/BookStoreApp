@@ -3,15 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34316.72
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookStoreWeb", "BookStoreWeb\BookStoreWeb.csproj", "{205F5922-F6EA-4E54-B2B6-DDA4426BBB64}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookStoreWeb", "BookStoreWeb\BookStoreWeb.csproj", "{205F5922-F6EA-4E54-B2B6-DDA4426BBB64}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookStoreApi", "BookStoreApi\BookStoreApi.csproj", "{C069E908-8421-46F0-AFFD-ADF39BAB3385}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookStoreApi", "BookStoreApi\BookStoreApi.csproj", "{C069E908-8421-46F0-AFFD-ADF39BAB3385}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookStoreApp.DAL", "BookStoreApp.DAL\BookStoreApp.DAL.csproj", "{6F86AE9A-68C1-4336-BB77-E4C43A3BF87B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookStoreApp.DAL", "BookStoreApp.DAL\BookStoreApp.DAL.csproj", "{6F86AE9A-68C1-4336-BB77-E4C43A3BF87B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookStoreApp.BLL", "BookStoreApp.BLL\BookStoreApp.BLL.csproj", "{2E6FF8B6-E2C5-4236-BCBF-A69CADA12926}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookStoreApp.BLL", "BookStoreApp.BLL\BookStoreApp.BLL.csproj", "{2E6FF8B6-E2C5-4236-BCBF-A69CADA12926}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookStoreApp.Entity", "BookStoreApp.Entity\BookStoreApp.Entity.csproj", "{C6FD0AEE-960B-42FB-B762-C53DB8788952}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookStoreApp.Entity", "BookStoreApp.Entity\BookStoreApp.Entity.csproj", "{C6FD0AEE-960B-42FB-B762-C53DB8788952}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookStoreApp.Dto", "BookStoreApp.Dto\BookStoreApp.Dto.csproj", "{11163968-15CD-4503-9363-2527DE32D960}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{C6FD0AEE-960B-42FB-B762-C53DB8788952}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C6FD0AEE-960B-42FB-B762-C53DB8788952}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C6FD0AEE-960B-42FB-B762-C53DB8788952}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11163968-15CD-4503-9363-2527DE32D960}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11163968-15CD-4503-9363-2527DE32D960}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11163968-15CD-4503-9363-2527DE32D960}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11163968-15CD-4503-9363-2527DE32D960}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -11,7 +11,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="12.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\BookStoreApp.DAL\BookStoreApp.DAL.csproj" />
+    <ProjectReference Include="..\BookStoreApp.Dto\BookStoreApp.Dto.csproj" />
   </ItemGroup>
 
 </Project>

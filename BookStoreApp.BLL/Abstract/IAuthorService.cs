@@ -1,6 +1,9 @@
-﻿namespace BookStoreApp.BLL.Abstract;
+﻿using BookStoreApp.Dto.Dto.AuthorDto;
+using BookStoreApp.Entity.Concrete;
 
-public interface IAuthorService
+namespace BookStoreApp.BLL.Abstract;
+
+public interface IAuthorService : IGenericService<AuthorEnumerableDto, AuthorInsertDto, AuthorUpdateDto, Author>
 {
 
 }

@@ -1,6 +1,9 @@
-﻿namespace BookStoreApp.BLL.Abstract;
+﻿using BookStoreApp.Dto.Dto.CategoryDto;
+using BookStoreApp.Entity.Concrete;
 
-public interface ICategoryService
+namespace BookStoreApp.BLL.Abstract;
+
+public interface ICategoryService : IGenericService<CategoryEnumerableDto, CategoryInsertDto, CategoryUpdateDto, Category>
 {
 
 }

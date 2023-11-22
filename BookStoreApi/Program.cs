@@ -1,4 +1,8 @@
+using BookStoreApp.BLL.Abstract;
+using BookStoreApp.BLL.Concrete;
+using BookStoreApp.BLL.Mapping;
 using BookStoreApp.DAL.Context;
+using BookStoreApp.DAL.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookStoreApi
@@ -13,7 +17,12 @@ namespace BookStoreApi
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+            builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DevConnection")));
+            builder.Services.AddScoped<IUOW, UOW>();
+            builder.Services.AddScoped<ICategoryService, CategoryManager>();
+            builder.Services.AddScoped<IBookService, BookManager>();
+            builder.Services.AddScoped<IAuthorService, AuthorManager>();
+            builder.Services.AddAutoMapper(typeof(AuthorProfile), typeof(BookProfile), typeof(CategoryProfile));
             //enable cors for my localhost https://localhost:7060/
             builder.Services.AddCors(options =>
             {

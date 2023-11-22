@@ -16,31 +16,56 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class, IBase
         _dbSet = _context.Set<T>();
     }
 
-    public async Task<List<T>> GetAllAsync()
+    public virtual async Task<List<T>> GetAllAsync()
     {
-        _dbSet.Where(x => x.IsActive == true);
-        return await _dbSet.ToListAsync();
+        return await _dbSet.Where(x => x.IsActive).ToListAsync();
     }
 
-    public async Task<T?> GetByIdAsync(int id)
+    public virtual async Task<T?> GetByIdAsync(int id)
     {
         return await _dbSet.FirstOrDefaultAsync(x => x.Id == id && x.IsActive == true);
     }
 
     public async Task AddAsync(T entity)
     {
+        entity.IsActive = true;
         await _dbSet.AddAsync(entity);
     }
 
     public Task UpdateAsync(T entity)
     {
+        var temp = _dbSet.Find(entity.Id);
+        foreach (var propertyInfo in typeof(IBaseEntity).GetProperties())
+        {
+            if (propertyInfo.Name != "Id")
+            {
+                var tempD = temp.GetType().GetProperty(propertyInfo.Name).GetValue(temp);
+                entity.GetType().GetProperty(propertyInfo.Name)!.SetValue(entity, tempD);
+            }
+        }
         _dbSet.Update(entity);
         return Task.CompletedTask;
     }
 
     public async Task RemoveAsync(int id)
     {
-        var tempData = await _dbSet.FindAsync(id);
-        _dbSet.Remove(tempData);
+        var tempData = await _dbSet.FirstOrDefaultAsync(x => x.Id == id);
+        tempData.IsActive = false;
     }
+    public virtual async Task<List<T>> GetAllIncludingAllAsync()
+    {
+        var query = _dbSet.AsQueryable();
+
+        var navigationProperties = _context.Model.FindEntityType(typeof(T))
+            .GetNavigations()
+            .Select(e => e.Name);
+
+        foreach (var propertyName in navigationProperties)
+        {
+            query = query.Include(propertyName);
+        }
+
+        return await query.Where(x => x.IsActive).ToListAsync();
+    }
+
 }

@@ -1,52 +1,62 @@
-﻿using BookStoreApp.BLL.Abstract;
+﻿using AutoMapper;
+using BookStoreApp.BLL.Abstract;
 using BookStoreApp.BLL.ResponsePattern;
 using BookStoreApp.DAL.UnitOfWork;
+using BookStoreApp.Dto.IDto;
 using BookStoreApp.Entity.Abstract;
-
 namespace BookStoreApp.BLL.Concrete;
-
-public class GenericManager<T> : IGenericService<T> where T : class, IBaseEntity
+public class GenericManager<TListDto, TCreateDto, TUpdateDto, T> : IGenericService<TListDto, TCreateDto, TUpdateDto, T>
+    where T : class, IBaseEntity
+    where TListDto : class, IEnumarableDto
+    where TCreateDto : class, ICreateDto
+    where TUpdateDto : class, IUpdateDto
 {
     private readonly IUOW _uow;
+    private readonly IMapper _mapper;
 
-    public GenericManager(IUOW uow)
+    public GenericManager(IUOW uow, IMapper mapper)
     {
         _uow = uow;
+        _mapper = mapper;
     }
-    public async Task<Response<List<T>>> GetAllAsync()
+    public async Task<Response<List<TListDto>>> GetAllAsync()
     {
         try
         {
             var tempList = await _uow.GetGenericRepository<T>().GetAllAsync();
-            return Response<List<T>>.Success(tempList, "Mission Success");
+            var TDtoList = _mapper.Map<List<TListDto>>(tempList);
+            return Response<List<TListDto>>.Success(TDtoList, "Mission Success");
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
-            return Response<List<T>>.Fail(e.Message);
+            return Response<List<TListDto>>.Fail(e.Message);
         }
     }
 
 
-    public async Task<Response<T?>> GetByIdAsync(int id)
+    public async Task<Response<TCreateDto?>> GetByIdAsync(int id)
     {
 
         try
         {
             var tempData = await _uow.GetGenericRepository<T>().GetByIdAsync(id);
-            return Response<T?>.Success(tempData, "Mission Success");
+            var TCreateorUpdateDto = _mapper.Map<TCreateDto>(tempData);
+            return Response<TCreateDto?>.Success(TCreateorUpdateDto, "Mission Success");
         }
         catch (Exception e)
         {
-            return Response<T?>.Fail(e.Message);
+            return Response<TCreateDto?>.Fail(e.Message);
         }
     }
 
-    public async Task<Response> AddAsync(T entity)
+    public async Task<Response> AddAsync(TCreateDto entity)
     {
         try
         {
-            await _uow.GetGenericRepository<T>().AddAsync(entity);
+
+            var Tentity = _mapper.Map<T>(entity);
+            await _uow.GetGenericRepository<T>().AddAsync(Tentity);
             await _uow.SaveAsync();
 
             return Response.Success("Mission Success");
@@ -56,12 +66,12 @@ public class GenericManager<T> : IGenericService<T> where T : class, IBaseEntity
             return Response.Fail(e.Message);
         }
     }
-
-    public async Task<Response> UpdateAsync(T entity)
+    public async Task<Response> UpdateAsync(TUpdateDto entity)
     {
         try
         {
-            await _uow.GetGenericRepository<T>().UpdateAsync(entity);
+            var Tentity = _mapper.Map<T>(entity);
+            await _uow.GetGenericRepository<T>().UpdateAsync(Tentity);
             await _uow.SaveAsync();
             return Response.Success("Mission success");
         }
@@ -82,6 +92,21 @@ public class GenericManager<T> : IGenericService<T> where T : class, IBaseEntity
         catch (Exception e)
         {
             return Response.Fail(e.Message);
+        }
+    }
+
+    public async Task<Response<List<TListDto>>> GetAllIncludingAllAsync()
+    {
+        try
+        {
+            var tempData = await _uow.GetGenericRepository<T>().GetAllIncludingAllAsync();
+            var listDto = _mapper.Map<List<TListDto>>(tempData);
+            return Response<List<TListDto>>.Success(listDto, "Mission success");
+        }
+        catch (Exception e)
+        {
+            return Response<List<TListDto>>.Fail(e.Message);
+
         }
     }
 }

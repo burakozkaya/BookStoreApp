@@ -7,8 +7,14 @@ namespace BookStoreWeb
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddControllersWithViews();
-
+            builder.Services.AddControllersWithViews().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+            });
+            builder.Services.AddHttpClient("BookStoreClient", c =>
+            {
+                c.BaseAddress = new Uri("https://localhost:7015/api/");
+            });
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
