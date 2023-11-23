@@ -7,28 +7,45 @@
 
 <table class="table table-striped">
     <thead>
-        <tr>
-            <th>Title</th>
-            <th>Description</th>
-            <th>CategoryName</th>
-            <th>AuthorName</th>
-            <th>Stock</th>
-            <th>Price</th>
-            <th></th>
-        </tr>
+    <tr>
+        <th>Title</th>
+        <th>Description</th>
+        <th>CategoryName</th>
+        <th>AuthorName</th>
+        <th>Stock</th>
+        <th>Price</th>
+        <th></th>
+    </tr>
     </thead>
     <tbody>
-        @foreach (var book in Model)
-        {
-            <tr>
-                <td>@book.Title</td>
-                <td>@book.Description</td>
-                <td>@book.CategoryName</td>
-                <td>@book.AuthorName</td>
-                <td>@book.Stock</td>
-                <td>@book.Price</td>
-                <td><a class="btn btn-info" asp-action="Update" asp-route-id="@book.Id">Güncelle</a><a class="btn btn-danger" asp-action="Delete" asp-route-id="@book.Id">Sil</a></td>
-            </tr>
-        }
+    @foreach (var book in Model)
+    {
+        <tr>
+            <td>@book.Title</td>
+            <td>@book.Description</td>
+            <td>@book.CategoryName</td>
+            <td>@book.AuthorName</td>
+            <td>@book.Stock</td>
+            <td>@book.Price</td>
+            <td><a class="btn btn-info" asp-action="Update" asp-route-id="@book.Id">Güncelle</a><a class="btn btn-danger" asp-action="Delete" asp-route-id="@book.Id">Sil</a></td>
+        </tr>
+    }
     </tbody>
 </table>
+@section Scripts
+{
+    <script>
+        $(document).ready(function() {
+            $.ajax({
+                url: "https://localhost:7015/api/Book",
+                type: "GET",
+                success: function(data) {
+                    // Handle the response data here
+                },
+                error: function(error) {
+                    // Handle the error here
+                }
+            });
+        });
+    </script>
+}

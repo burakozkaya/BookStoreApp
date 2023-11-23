@@ -34,15 +34,19 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class, IBase
 
     public Task UpdateAsync(T entity)
     {
+
         var temp = _dbSet.Find(entity.Id);
-        foreach (var propertyInfo in typeof(IBaseEntity).GetProperties())
-        {
-            if (propertyInfo.Name != "Id")
-            {
-                var tempD = temp.GetType().GetProperty(propertyInfo.Name).GetValue(temp);
-                entity.GetType().GetProperty(propertyInfo.Name)!.SetValue(entity, tempD);
-            }
-        }
+        _context.Entry(temp).State = EntityState.Detached;
+        entity.IsActive = temp!.IsActive;
+        //foreach (var propertyInfo in typeof(IBaseEntity).GetProperties())
+        //{
+        //    if (propertyInfo.Name != "Id")
+        //    {
+        //        var tempD = temp.GetType().GetProperty(propertyInfo.Name).GetValue(temp);
+        //        entity.GetType().GetProperty(propertyInfo.Name)!.SetValue(entity, tempD);
+        //    }
+        //}
+        //_context.Entry(temp).State = EntityState.Detached;
         _dbSet.Update(entity);
         return Task.CompletedTask;
     }
@@ -57,7 +61,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class, IBase
         var query = _dbSet.AsQueryable();
 
         var navigationProperties = _context.Model.FindEntityType(typeof(T))
-            .GetNavigations()
+            ?.GetNavigations()
             .Select(e => e.Name);
 
         foreach (var propertyName in navigationProperties)

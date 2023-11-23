@@ -52,5 +52,14 @@ namespace BookStoreApi.Controllers
                 return Ok();
             return BadRequest();
         }
+
+        [HttpPut]
+        public async Task<IActionResult> PutCategory(CategoryUpdateDto updateDto)
+        {
+            var response = await _categoryService.UpdateAsync(updateDto);
+            if (response.IsSuccess)
+                return Ok();
+            return BadRequest();
+        }
     }
 }

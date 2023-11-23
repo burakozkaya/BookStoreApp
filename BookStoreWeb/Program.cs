@@ -11,9 +11,10 @@ namespace BookStoreWeb
             {
                 options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
             });
-            builder.Services.AddHttpClient("BookStoreClient", c =>
+            builder.Services.AddHttpClient("BookStoreApi", c =>
             {
-                c.BaseAddress = new Uri("https://localhost:7015/api/");
+                var apiHost = builder.Configuration["ApiSettings:ApiHost"];
+                c.BaseAddress = new Uri(apiHost);
             });
             var app = builder.Build();
 

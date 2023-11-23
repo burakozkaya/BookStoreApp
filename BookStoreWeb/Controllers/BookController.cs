@@ -7,10 +7,12 @@ namespace BookStoreWeb.Controllers
     public class BookController : Controller
     {
         private readonly IHttpClientFactory _clientFactory;
-        private readonly string clientName = "BookStoreClient";
-        public BookController(IHttpClientFactory clientFactory)
+        private const string clientName = "BookStoreApi";
+        private readonly IConfiguration _configuration;
+        public BookController(IHttpClientFactory clientFactory, IConfiguration configuration)
         {
             _clientFactory = clientFactory;
+            _configuration = configuration;
         }
         public async Task<IActionResult> Index()
         {

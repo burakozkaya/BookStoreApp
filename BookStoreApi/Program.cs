@@ -24,10 +24,11 @@ namespace BookStoreApi
             builder.Services.AddScoped<IAuthorService, AuthorManager>();
             builder.Services.AddAutoMapper(typeof(AuthorProfile), typeof(BookProfile), typeof(CategoryProfile));
             //enable cors for my localhost https://localhost:7060/
+            var localHost = builder.Configuration.GetSection("WebAppCors:HostPort").Value;
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy",
-                                       builder => builder.WithOrigins("https://localhost:7060")
+                                       builder => builder.WithOrigins(localHost)
                                                           .AllowAnyMethod()
                                                           .AllowAnyHeader()
                                                           .AllowCredentials());
