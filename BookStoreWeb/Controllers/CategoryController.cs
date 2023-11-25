@@ -8,12 +8,11 @@ namespace BookStoreWeb.Controllers
     {
         private readonly HttpClient _client;
         private readonly JsonService _jsonService;
-        private const string clientName = "BookStoreApi";
 
 
         public CategoryController(IHttpClientFactory clientFactory, JsonService jsonService)
         {
-            _client = clientFactory.CreateClient(clientName);
+            _client = clientFactory.CreateClient("BookStoreApi");
             _jsonService = jsonService;
         }
         public async Task<IActionResult> Index()

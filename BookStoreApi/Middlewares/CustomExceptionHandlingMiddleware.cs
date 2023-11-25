@@ -1,4 +1,5 @@
 ﻿using BookStoreApp.DAL.Context;
+using BookStoreApp.Entity.Concrete;
 
 namespace BookStoreApi.Middlewares;
 
@@ -12,21 +13,29 @@ public class CustomExceptionHandlingMiddleware
 
     public async Task Invoke(HttpContext context)
     {
-        var dbContext = context.RequestServices.GetRequiredService<AppDbContext>();
+        var dbcontext = context.RequestServices.GetRequiredService<AppDbContext>();
         try
         {
             await _next(context);
         }
         catch (Exception ex)
         {
-            dbContext.ErrorLogs.Add(new()
+            var errorLog = new AppErrorLog()
             {
-                HttpMethod = context.Request.Method,
                 Error = ex.Message,
                 Path = context.Request.Path,
                 Date = DateTime.UtcNow
-            });
-            await dbContext.SaveChangesAsync();
+            };
+            dbcontext.ErrorLogs.Add(errorLog);
+            try
+            {
+                await dbcontext.SaveChangesAsync();
+            }
+            catch
+            {
+                //loglama işlemi hatalarını yakalamak için
+            }
         }
     }
+
 }

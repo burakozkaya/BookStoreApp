@@ -7,19 +7,17 @@ namespace BookStoreWeb.Controllers
 {
     public class BookController : Controller
     {
-        private readonly IHttpClientFactory _clientFactory;
-        private const string clientName = "BookStoreApi";
+        private readonly HttpClient _client;
         private readonly JsonService _jsonService;
 
         public BookController(IHttpClientFactory clientFactory, JsonService jsonService)
         {
-            _clientFactory = clientFactory;
+            _client = clientFactory.CreateClient("BookStoreApi");
             _jsonService = jsonService;
         }
         public async Task<IActionResult> Index()
         {
-            var client = _clientFactory.CreateClient(clientName);
-            var bookResponse = await client.GetAsync("api/Book");
+            var bookResponse = await _client.GetAsync("api/Book");
             if (bookResponse.IsSuccessStatusCode)
             {
                 var bookJson = await bookResponse.Content.ReadAsStringAsync();
@@ -32,9 +30,8 @@ namespace BookStoreWeb.Controllers
 
         public async Task<IActionResult> Insert()
         {
-            var client = _clientFactory.CreateClient(clientName);
-            var authorResponse = await client.GetAsync("api/Author");
-            var categoryResponse = await client.GetAsync("api/Category");
+            var authorResponse = await _client.GetAsync("api/Author");
+            var categoryResponse = await _client.GetAsync("api/Category");
             if (authorResponse.IsSuccessStatusCode && authorResponse.IsSuccessStatusCode)
             {
                 var authorJson = await authorResponse.Content.ReadAsStringAsync();
@@ -62,9 +59,8 @@ namespace BookStoreWeb.Controllers
         [HttpPost]
         public async Task<IActionResult> Insert(BookInsertVm bookInsertVm)
         {
-            var client = _clientFactory.CreateClient(clientName);
 
-            var response = await client.PostAsJsonAsync("api/book", bookInsertVm);
+            var response = await _client.PostAsJsonAsync("api/book", bookInsertVm);
 
             if (response.IsSuccessStatusCode)
                 return RedirectToAction("Index", "Book");
@@ -75,13 +71,12 @@ namespace BookStoreWeb.Controllers
 
         public async Task<IActionResult> Update(int id)
         {
-            var client = _clientFactory.CreateClient(clientName);
 
-            var tempAuthor = await client.GetFromJsonAsync<List<AuthorListVm>>("api/Author");
+            var tempAuthor = await _client.GetFromJsonAsync<List<AuthorListVm>>("api/Author");
 
-            var tempCat = await client.GetFromJsonAsync<List<CategoryListVm>>("api/Category");
+            var tempCat = await _client.GetFromJsonAsync<List<CategoryListVm>>("api/Category");
 
-            var bookUpdateVm = await client.GetFromJsonAsync<BookUpdateVm>($"api/Book/{id}");
+            var bookUpdateVm = await _client.GetFromJsonAsync<BookUpdateVm>($"api/Book/{id}");
 
             ViewBag.AuthorSelectItem = tempAuthor.Select(x => new SelectListItem()
             {
@@ -100,10 +95,9 @@ namespace BookStoreWeb.Controllers
         [HttpPost]
         public async Task<IActionResult> Update(BookUpdateVm bookUpdateVm)
         {
-            var client = _clientFactory.CreateClient(clientName);
 
 
-            var response = await client.PutAsJsonAsync("api/Book", bookUpdateVm);
+            var response = await _client.PutAsJsonAsync("api/Book", bookUpdateVm);
             if (response.IsSuccessStatusCode)
                 return RedirectToAction("Index", "Book");
             return RedirectToAction("Update", "Book", bookUpdateVm);
@@ -111,8 +105,7 @@ namespace BookStoreWeb.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
-            var client = _clientFactory.CreateClient(clientName);
-            var response = await client.DeleteAsync($"api/Book/{id}");
+            var response = await _client.DeleteAsync($"api/Book/{id}");
             TempData["Delete"] = response.IsSuccessStatusCode;
             return RedirectToAction("Index", "Book");
         }
