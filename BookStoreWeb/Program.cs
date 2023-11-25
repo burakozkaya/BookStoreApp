@@ -1,3 +1,5 @@
+using BookStoreWeb.Service;
+
 namespace BookStoreWeb
 {
     public class Program
@@ -11,6 +13,9 @@ namespace BookStoreWeb
             {
                 options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
             });
+
+            builder.Services.AddSingleton<JsonService>();
+
             builder.Services.AddHttpClient("BookStoreApi", c =>
             {
                 var apiHost = builder.Configuration["ApiSettings:ApiHost"];

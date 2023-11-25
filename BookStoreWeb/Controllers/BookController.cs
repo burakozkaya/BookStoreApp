@@ -1,4 +1,5 @@
 ﻿using BookStoreWeb.Models;
+using BookStoreWeb.Service;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -9,17 +10,18 @@ namespace BookStoreWeb.Controllers
         private readonly IHttpClientFactory _clientFactory;
         private const string clientName = "BookStoreApi";
         private readonly IConfiguration _configuration;
-        public BookController(IHttpClientFactory clientFactory, IConfiguration configuration)
+        private readonly JsonService _jsonService;
+
+        public BookController(IHttpClientFactory clientFactory, IConfiguration configuration, JsonService jsonService)
         {
             _clientFactory = clientFactory;
             _configuration = configuration;
+            _jsonService = jsonService;
         }
         public async Task<IActionResult> Index()
         {
             List<BookListVm>? bookListVm;
-
             var client = _clientFactory.CreateClient(clientName);
-
             bookListVm = await client.GetFromJsonAsync<List<BookListVm>>("Book");
 
             return View(bookListVm);
@@ -28,19 +30,29 @@ namespace BookStoreWeb.Controllers
         public async Task<IActionResult> Insert()
         {
             var client = _clientFactory.CreateClient(clientName);
-            var tempAuthor = await client.GetFromJsonAsync<List<AuthorListVm>>("Author");
-            var tempCat = await client.GetFromJsonAsync<List<CategoryListVm>>("Category");
-            ViewBag.AuthorSelectItem = tempAuthor.Select(x => new SelectListItem()
+            var tempAuthor = await client.GetAsync("Author");
+            //<List<AuthorListVm>> <List<CategoryListVm>>
+            var tempCat = await client.GetAsync("Category");
+            if (tempAuthor.IsSuccessStatusCode && tempAuthor.IsSuccessStatusCode)
             {
-                Text = x.Name,
-                Value = x.Id.ToString()
+                var authorJson = await tempAuthor.Content.ReadAsStringAsync();
+                var categoryJson = await tempCat.Content.ReadAsStringAsync();
 
-            });
-            ViewBag.CategorySelectItem = tempCat.Select(x => new SelectListItem()
-            {
-                Text = x.Name,
-                Value = x.Id.ToString()
-            });
+                var authorList = _jsonService.Deserialize<List<AuthorListVm>>(authorJson);
+                var categoryList = _jsonService.Deserialize<List<CategoryListVm>>(categoryJson);
+                ViewBag.AuthorSelectItem = authorList.Select(x => new SelectListItem()
+                {
+                    Text = x.Name,
+                    Value = x.Id.ToString()
+
+                });
+                ViewBag.CategorySelectItem = categoryList.Select(x => new SelectListItem()
+                {
+                    Text = x.Name,
+                    Value = x.Id.ToString()
+                });
+            }
+
 
             return View();
         }

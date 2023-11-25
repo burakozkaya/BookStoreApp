@@ -16,6 +16,7 @@ namespace BookStoreApi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllBook()
         {
+
             var response = await _bookService.GetAllIncludingAllAsync();
             if (response.IsSuccess)
                 return Ok(response.Data);

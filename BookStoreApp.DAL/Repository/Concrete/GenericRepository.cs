@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookStoreApp.DAL.Repository.Concrete;
 
-public abstract class GenericRepository<T> : IGenericRepository<T> where T : class, IBaseEntity
+public class GenericRepository<T> : IGenericRepository<T> where T : class, IBaseEntity
 {
     protected readonly AppDbContext _context;
     protected readonly DbSet<T> _dbSet;
