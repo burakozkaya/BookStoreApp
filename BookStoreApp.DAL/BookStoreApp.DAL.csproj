@@ -7,7 +7,6 @@
   </PropertyGroup>
 	<ItemGroup>
 		<Folder Include="Repository\Abstract\" />
-		<Folder Include="UnitOfWork\" />
 	</ItemGroup>
 
 	<ItemGroup>

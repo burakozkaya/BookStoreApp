@@ -11,11 +11,6 @@ public class AuthorRepository : GenericRepository<Author>, IAuthorRepository
     {
     }
 
-    public override async Task<List<Author>> GetAllAsync()
-    {
-        return await _dbSet.Where(x => x.IsActive).Include(x => x.Books).ToListAsync();
-    }
-
     public override async Task<Author?> GetByIdAsync(int id)
     {
         return await _dbSet.Where(x => x.IsActive && x.Id == id).Include(x => x.Books).FirstOrDefaultAsync();

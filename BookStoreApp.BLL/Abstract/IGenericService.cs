@@ -11,7 +11,6 @@ public interface IGenericService<TListDto, TCreateDto, TUpdateDto, T>
     where TCreateDto : class, ICreateDto
     where TUpdateDto : class, IUpdateDto
 {
-    Task<Response<List<TListDto>>> GetAllAsync();
     Task<Response<TCreateDto?>> GetByIdAsync(int id);
     Task<Response> AddAsync(TCreateDto dto);
     Task<Response> UpdateAsync(TUpdateDto dto);

@@ -8,7 +8,7 @@ namespace BookStoreApp.BLL.Concrete;
 
 public class CategoryManager : GenericManager<CategoryEnumerableDto, CategoryInsertDto, CategoryUpdateDto, Category>, ICategoryService
 {
-    public CategoryManager(IUOW uow, IMapper mapper) : base(uow, mapper)
+    public CategoryManager(IUow uow, IMapper mapper) : base(uow, mapper)
     {
     }
 }

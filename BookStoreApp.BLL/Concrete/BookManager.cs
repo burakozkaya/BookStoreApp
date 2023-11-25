@@ -8,7 +8,7 @@ namespace BookStoreApp.BLL.Concrete;
 
 public class BookManager : GenericManager<BookEnumerableDto, BookInsertDto, BookUpdateDto, Book>, IBookService
 {
-    public BookManager(IUOW uow, IMapper mapper) : base(uow, mapper)
+    public BookManager(IUow uow, IMapper mapper) : base(uow, mapper)
     {
     }
 }

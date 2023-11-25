@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookStoreApp.DAL.Repository.Concrete;
 
-public class GenericRepository<T> : IGenericRepository<T> where T : class, IBaseEntity
+public abstract class GenericRepository<T> : IGenericRepository<T> where T : class, IBaseEntity
 {
     protected readonly AppDbContext _context;
     protected readonly DbSet<T> _dbSet;
@@ -15,12 +15,6 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class, IBase
         _context = context;
         _dbSet = _context.Set<T>();
     }
-
-    public virtual async Task<List<T>> GetAllAsync()
-    {
-        return await _dbSet.Where(x => x.IsActive).ToListAsync();
-    }
-
     public virtual async Task<T?> GetByIdAsync(int id)
     {
         return await _dbSet.FirstOrDefaultAsync(x => x.Id == id && x.IsActive == true);

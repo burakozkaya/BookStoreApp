@@ -8,7 +8,7 @@ namespace BookStoreApp.BLL.Concrete;
 
 public class AuthorManager : GenericManager<AuthorEnumerableDto, AuthorInsertDto, AuthorUpdateDto, Author>, IAuthorService
 {
-    public AuthorManager(IUOW uow, IMapper mapper) : base(uow, mapper)
+    public AuthorManager(IUow uow, IMapper mapper) : base(uow, mapper)
     {
     }
 }
