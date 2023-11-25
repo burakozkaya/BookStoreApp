@@ -61,7 +61,17 @@ namespace BookStoreWeb.Controllers
             }
 
             return RedirectToAction("Index", "Category");
+        }
+        [HttpPost]
+        public async Task<IActionResult> Update(CategoryUpdateVm categoryUpdateVm)
+        {
+            var categoryResponse = await _client.PostAsJsonAsync($"api/Category", categoryUpdateVm);
+            if (categoryResponse.IsSuccessStatusCode)
+            {
+                return RedirectToAction("Index", "Category");
+            }
 
+            return View(categoryUpdateVm);
         }
     }
 }
