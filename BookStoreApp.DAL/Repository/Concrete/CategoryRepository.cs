@@ -14,4 +14,15 @@ public class CategoryRepository : GenericRepository<Category>, ICategoryReposito
     {
         return await _dbSet.Include(x => x.Books).FirstOrDefaultAsync(x => x.Id == id && x.IsActive);
     }
+
+    public override async Task<List<Category>> GetAllIncludingAllAsync()
+    {
+        return await _dbSet.Where(x => x.IsActive).Include(x => x.Books).Select(x => new Category()
+        {
+            Id = x.Id,
+            IsActive = x.IsActive,
+            Name = x.Name,
+            Books = x.Books.Where(x => x.IsActive).ToList()
+        }).ToListAsync();
+    }
 }

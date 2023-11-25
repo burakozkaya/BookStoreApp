@@ -28,7 +28,7 @@ namespace BookStoreApi.Controllers
         {
             var response = await _authorService.GetByIdAsync(id);
             if (response.IsSuccess)
-                return Ok();
+                return Ok(response.Data);
             return BadRequest(response.Message);
         }
         [HttpPost]

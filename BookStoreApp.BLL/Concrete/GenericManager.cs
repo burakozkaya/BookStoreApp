@@ -11,26 +11,26 @@ public class GenericManager<TListDto, TCreateDto, TUpdateDto, T> : IGenericServi
     where TCreateDto : class, ICreateDto
     where TUpdateDto : class, IUpdateDto
 {
-    private readonly IUow _uow;
-    private readonly IMapper _mapper;
+    protected readonly IUow _uow;
+    protected readonly IMapper _mapper;
 
     public GenericManager(IUow uow, IMapper mapper)
     {
         _uow = uow;
         _mapper = mapper;
     }
-    public async Task<Response<TCreateDto?>> GetByIdAsync(int id)
+    public async Task<Response<TCreateDto>> GetByIdAsync(int id)
     {
 
         try
         {
             var tempData = await _uow.GetGenericRepository<T>().GetByIdAsync(id);
             var TCreateorUpdateDto = _mapper.Map<TCreateDto>(tempData);
-            return Response<TCreateDto?>.Success(TCreateorUpdateDto, "Mission Success");
+            return Response<TCreateDto>.Success(TCreateorUpdateDto, "Mission Success");
         }
         catch (Exception e)
         {
-            return Response<TCreateDto?>.Fail(e.Message);
+            return Response<TCreateDto>.Fail(e.Message);
         }
     }
 
@@ -79,7 +79,7 @@ public class GenericManager<TListDto, TCreateDto, TUpdateDto, T> : IGenericServi
         }
     }
 
-    public async Task<Response<List<TListDto>>> GetAllIncludingAllAsync()
+    public virtual async Task<Response<List<TListDto>>> GetAllIncludingAllAsync()
     {
         try
         {

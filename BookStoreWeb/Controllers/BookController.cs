@@ -9,34 +9,37 @@ namespace BookStoreWeb.Controllers
     {
         private readonly IHttpClientFactory _clientFactory;
         private const string clientName = "BookStoreApi";
-        private readonly IConfiguration _configuration;
         private readonly JsonService _jsonService;
 
-        public BookController(IHttpClientFactory clientFactory, IConfiguration configuration, JsonService jsonService)
+        public BookController(IHttpClientFactory clientFactory, JsonService jsonService)
         {
             _clientFactory = clientFactory;
-            _configuration = configuration;
             _jsonService = jsonService;
         }
         public async Task<IActionResult> Index()
         {
-            List<BookListVm>? bookListVm;
             var client = _clientFactory.CreateClient(clientName);
-            bookListVm = await client.GetFromJsonAsync<List<BookListVm>>("Book");
+            var bookResponse = await client.GetAsync("api/Book");
+            if (bookResponse.IsSuccessStatusCode)
+            {
+                var bookJson = await bookResponse.Content.ReadAsStringAsync();
+                var bookListVm = _jsonService.Deserialize<List<BookListVm>>(bookJson);
+                return View(bookListVm);
+            }
 
-            return View(bookListVm);
+            return View();
         }
 
         public async Task<IActionResult> Insert()
         {
             var client = _clientFactory.CreateClient(clientName);
-            var tempAuthor = await client.GetAsync("Author");
+            var authorResponse = await client.GetAsync("api/Author");
             //<List<AuthorListVm>> <List<CategoryListVm>>
-            var tempCat = await client.GetAsync("Category");
-            if (tempAuthor.IsSuccessStatusCode && tempAuthor.IsSuccessStatusCode)
+            var categoryResponse = await client.GetAsync("api/Category");
+            if (authorResponse.IsSuccessStatusCode && authorResponse.IsSuccessStatusCode)
             {
-                var authorJson = await tempAuthor.Content.ReadAsStringAsync();
-                var categoryJson = await tempCat.Content.ReadAsStringAsync();
+                var authorJson = await authorResponse.Content.ReadAsStringAsync();
+                var categoryJson = await categoryResponse.Content.ReadAsStringAsync();
 
                 var authorList = _jsonService.Deserialize<List<AuthorListVm>>(authorJson);
                 var categoryList = _jsonService.Deserialize<List<CategoryListVm>>(categoryJson);
@@ -62,11 +65,10 @@ namespace BookStoreWeb.Controllers
         {
             var client = _clientFactory.CreateClient(clientName);
 
-            var response = await client.PostAsJsonAsync("book", bookInsertVm);
+            var response = await client.PostAsJsonAsync("api/book", bookInsertVm);
 
             if (response.IsSuccessStatusCode)
                 return RedirectToAction("Index", "Book");
-
 
             return View(bookInsertVm);
         }
@@ -76,11 +78,11 @@ namespace BookStoreWeb.Controllers
         {
             var client = _clientFactory.CreateClient(clientName);
 
-            var tempAuthor = await client.GetFromJsonAsync<List<AuthorListVm>>("Author");
+            var tempAuthor = await client.GetFromJsonAsync<List<AuthorListVm>>("api/Author");
 
-            var tempCat = await client.GetFromJsonAsync<List<CategoryListVm>>("Category");
+            var tempCat = await client.GetFromJsonAsync<List<CategoryListVm>>("api/Category");
 
-            var bookUpdateVm = await client.GetFromJsonAsync<BookUpdateVm>($"Book/{id}");
+            var bookUpdateVm = await client.GetFromJsonAsync<BookUpdateVm>($"api/Book/{id}");
 
             ViewBag.AuthorSelectItem = tempAuthor.Select(x => new SelectListItem()
             {
@@ -94,8 +96,6 @@ namespace BookStoreWeb.Controllers
                 Value = x.Id.ToString()
             });
 
-
-
             return View(bookUpdateVm);
         }
         [HttpPost]
@@ -104,19 +104,18 @@ namespace BookStoreWeb.Controllers
             var client = _clientFactory.CreateClient(clientName);
 
 
-            var response = await client.PutAsJsonAsync("Book", bookUpdateVm);
+            var response = await client.PutAsJsonAsync("api/Book", bookUpdateVm);
             if (response.IsSuccessStatusCode)
-                return View(bookUpdateVm);
-            return RedirectToAction("Index", "Book");
+                return RedirectToAction("Index", "Book");
+            return RedirectToAction("Update", "Book", bookUpdateVm);
         }
 
         public async Task<IActionResult> Delete(int id)
         {
             var client = _clientFactory.CreateClient(clientName);
-            var response = await client.DeleteAsync($"Book/{id}");
-
+            var response = await client.DeleteAsync($"api/Book/{id}");
+            TempData["Delete"] = response.IsSuccessStatusCode;
             return RedirectToAction("Index", "Book");
-
         }
     }
 }
