@@ -34,7 +34,6 @@ namespace BookStoreWeb.Controllers
         {
             var client = _clientFactory.CreateClient(clientName);
             var authorResponse = await client.GetAsync("api/Author");
-            //<List<AuthorListVm>> <List<CategoryListVm>>
             var categoryResponse = await client.GetAsync("api/Category");
             if (authorResponse.IsSuccessStatusCode && authorResponse.IsSuccessStatusCode)
             {
