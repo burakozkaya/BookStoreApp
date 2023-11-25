@@ -8,8 +8,11 @@ This project is a comprehensive solution that includes various features such as 
 
 ### Dependencies
 
-* .NET Core 3.1 or later
-* Entity Framework Core
+*AutoMapper 12.0.1
+*AutoMapper.Extensions.Microsoft.DependencyInjection 12.0.1
+*Microsoft.EntityFrameworkCore 6.0.25
+*Microsoft.EntityFrameworkCore.Design 6.0.25
+*Microsoft.EntityFrameworkCore.SqlServer 6.0.25
 
 ### Installing
 
